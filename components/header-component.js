@@ -18,12 +18,9 @@ export function renderHeaderComponent({ element }) {
           : ""
       }  
       </button>
-  </div>
-  
-`;
+  </div>`;
 
-  element
-    .querySelector(".add-or-login-button")
+  element.querySelector(".add-or-login-button")
     .addEventListener("click", () => {
       if (user) {
         goToPage(ADD_POSTS_PAGE);

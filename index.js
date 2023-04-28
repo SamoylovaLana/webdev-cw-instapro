@@ -37,11 +37,11 @@ export const logout = () => {
 export const goToPage = (newPage, data) => {
   if (
     [
-      POSTS_PAGE,
-      AUTH_PAGE,
-      ADD_POSTS_PAGE,
-      USER_POSTS_PAGE,
-      LOADING_PAGE,
+      POSTS_PAGE,    // лицевая страница 
+      AUTH_PAGE,     // страница входа
+      ADD_POSTS_PAGE, // страничка добавления поста
+      USER_POSTS_PAGE, // страничка постов юзера
+      LOADING_PAGE, //страница загрузки
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
@@ -70,8 +70,8 @@ export const goToPage = (newPage, data) => {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      
+      renderApp();
     }
 
     page = newPage;
@@ -120,6 +120,7 @@ const renderApp = () => {
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
+      
     });
   }
 
