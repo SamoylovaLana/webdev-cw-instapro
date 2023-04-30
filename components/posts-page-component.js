@@ -1,48 +1,49 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import {goToPage} from "../index.js";
+import { goToPage, user } from "../index.js";
 
 export function renderPostsPageComponent({ appEl, posts}) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
-  /**
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
-  const postsHtml = posts.map((post, index) => `
-                  <li class="post" data-index=${index}>
-                    <div class="post-header" data-user-id="${post.user.id}">
-                        <img src="${post.user.imageUrl}" class="post-header__user-image">
-                        <p class="post-header__user-name">${post.user.name}</p>
-                    </div>
-                    <div class="post-image-container">
-                      <img class="post-image" src="${post.imageUrl}">
-                    </div>
-                    <div class="post-likes">
-                      <button data-post-id="${post.id}" class="like-button">
-                      ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
-                      </button>
-                      <p class="post-likes-text">
-                        Нравится: <strong>${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"}</strong>
-                      </p>
-                    </div>
-                    <p class="post-text">
-                      <span class="user-name">${post.user.name}</span>
-                      ${post.description}
-                    </p>
-                    <p class="post-date">
-                    ${post.createdAt} минут назад
-                    </p>
-                  </li>`).join("");
+   // TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
+   // можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
+  
+  const postsHtml = posts.map((post, index) => {     
+      `<li class="post" data-index=${index}>
+        <div class="post-header" data-user-id="${post.user.id}">
+            <img src="${post.user.imageUrl}" class="post-header__user-image">
+            <p class="post-header__user-name">${post.user.name}</p>
+        </div>
+        <div class="post-image-container">
+          <img class="post-image" src="${post.imageUrl}">
+        </div>
+        <div class="post-likes">
+          <button data-post-id="${post.id}" class="like-button">
+          ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
+          </button>
+          <p class="post-likes-text">
+            Нравится: <strong>${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"}</strong>
+          </p>
+        </div>
+        <p class="post-text">
+          <span class="user-name">${post.user.name}</span>
+          ${post.description}
+        </p>
+        <p class="post-date">
+        ${post.createdAt} минут назад
+        </p>
+      </li>`;
+  })
+    .join("");
 
- const appHtml = `
-              <div class="page-container">
-                <div class="header-container"></div>
-                <ul class="posts">
-                  ${postsHtml}
-                </ul>
-              </div>`;           
+  const appHtml = `
+       <div class="page-container">
+        <div class="header-container"></div>
+        <ul class="posts">
+          ${postsHtml}
+        </ul>
+      </div>`;           
 
   appEl.innerHTML = appHtml;
 
@@ -57,4 +58,31 @@ export function renderPostsPageComponent({ appEl, posts}) {
       });
     });
   }
+
+   /*/«Оживляем» кнопку и счетчик лайков
+   function likeButton() {
+    //Находит все элементы с классом like-button в разметке
+   const likeElements = document.querySelectorAll('.like-button');
+   //Цикл for проходит по каждому элементу в списке
+   for (const likeElement of likeElements) {
+     //Добавляет обработчик клика на конкретный элемент в списке
+     likeElement.addEventListener('click', ( event) => {
+       event.stopPropagation(); //останавливает всплытие события вверх по дереву
+       likeElement.classList.add('-loading-like')
+       delay(2000).then(()=> {
+         if (!comments[likeElement.dataset.index].isLiked) {
+           comments[likeElement.dataset.index].isLiked = "";
+           comments[likeElement.dataset.index].likes ++;
+         } else {
+           comments[likeElement.dataset.index].isLiked = "-loading-like";
+           comments[likeElement.dataset.index].likes -= 1;
+         }
+           likeElement.classList.remove("-loading-like");
+           
+           renderComments();
+       })
+     });
+   }
+ }*/
+
 }

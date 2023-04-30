@@ -89,7 +89,7 @@ export function getUserPosts({ token, id }) {
     });
 }
 
-export function addPost({ token, description, imageUrl }) {
+export function onAddPostClick({ token, description, imageUrl }) {
   return fetch(postsHost, {
     method: "POST",
     headers: {
