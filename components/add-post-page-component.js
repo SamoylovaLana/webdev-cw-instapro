@@ -2,10 +2,11 @@ import { onAddPostClick } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { POSTS_PAGE } from "../routes.js";
-import { goToPage } from "../index.js";
+import { goToPage, getToken } from "../index.js";
 
 export function renderAddPostPageComponent({ appEl }) {
 
+  // Рендер заголовка
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });

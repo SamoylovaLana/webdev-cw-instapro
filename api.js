@@ -11,16 +11,16 @@ export function getPosts({ token }) {
       Authorization: token,
     },
   })
-    .then((response) => {
-      if (response.status === 401) {
-        throw new Error("Нет авторизации");
-      }
+  .then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
 
-      return response.json();
-    })
-    .then((data) => {
-      return data.posts;
-    });
+    return response.json();
+  })
+  .then((data) => {
+    return data.posts;
+  });
 }
 
 // https://github.com/GlebkaF/webdev-hw-api/blob/main/pages/api/user/README.md#%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F
@@ -33,7 +33,8 @@ export function registerUser({ login, password, name, imageUrl }) {
       name,
       imageUrl,
     }),
-  }).then((response) => {
+  })
+  .then((response) => {
     if (response.status === 400) {
       throw new Error("Такой пользователь уже существует");
     }
@@ -48,7 +49,8 @@ export function loginUser({ login, password }) {
       login,
       password,
     }),
-  }).then((response) => {
+  })
+  .then((response) => {
     if (response.status === 400) {
       throw new Error("Неверный логин или пароль");
     }
@@ -60,11 +62,12 @@ export function loginUser({ login, password }) {
 export function uploadImage({ file }) {
   const data = new FormData();
   data.append("file", file);
-
+  
   return fetch(baseHost + "/api/upload/image", {
     method: "POST",
     body: data,
-  }).then((response) => {
+  })
+  .then((response) => {
     return response.json();
   });
 }
@@ -77,16 +80,16 @@ export function getUserPosts({ token, id }) {
       Authorization: token,
     },
   })
-    .then((response) => {
-      if (response.status === 401) {
-        throw new Error("Нет авторизации");
-      }
+  .then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
 
-      return response.json();
-    })
-    .then((data) => {
-      return data.posts;
-    });
+    return response.json();
+  })
+  .then((data) => {
+    return data.posts;
+  });
 }
 
 export function onAddPostClick({ token, description, imageUrl }) {
@@ -100,16 +103,38 @@ export function onAddPostClick({ token, description, imageUrl }) {
       imageUrl,
     }),
   })
-    .then((response) => {
-      if (response.status === 400) {
-        throw new Error("Нужно добавить фото и комментарий");
-      }
+  .then((response) => {
+    if (response.status === 400) {
+      throw new Error("Нужно добавить фото и комментарий");
+    }
 
-      return response.json();
-    })
-    .then((data) => {
-      return data.posts;
-    });
+    return response.json();
+  })
+  .then((data) => {
+    return data.posts;
+  });
 }
 
+export function deletePost( {token, id} ) {
+  return fetch("https://webdev-hw-api.vercel.app/api/v1/Reha/instapro/" + id, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then((response) => {
+    return response.json();
+  })
+}
 
+export function fetchLike({ token, postId, isLiked }) {
+  return fetch(postsHost + `/${postId}${isLiked ? '/dislike' : '/like'}`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+  .then((response) => {
+    return response.json();
+  })
+}

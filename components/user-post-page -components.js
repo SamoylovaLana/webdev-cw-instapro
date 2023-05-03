@@ -1,15 +1,17 @@
-import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, getToken, user } from "../index.js";
+import { getToken, user, posts } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
 
-export function renderPostsPageComponent({ appEl, posts}) {
+export function renderUserPostsPageComponent({ appEl, posts}) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
-   // TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   // можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-  
+  const postsUserHeaderHtml = posts.map((post) => {
+    return `
+    <img src="${post.user.imageUrl}" class="posts-user-header__user-image">
+    <p class="posts-user-header__user-name">${post.user.name}</p>`;
+  }).pop();
+
   const postsHtml = posts.map((post, index) => {    
       `<li class="post" data-index=${index}>
         <div class="post-header" data-user-id="${post.user.id}">
@@ -39,26 +41,21 @@ export function renderPostsPageComponent({ appEl, posts}) {
     .join("");
 
   const appHtml = `
-       <div class="page-container">
-        <div class="header-container"></div>
-        <ul class="posts">
-          ${postsHtml}
-        </ul>
-      </div>`;           
+      <div class="page-container">
+         <div class="header-container"></div>
+         <div class="posts-user-header">
+             ${postsUserHeaderHtml}
+         </div>
+         <ul class="posts">
+            ${postsHtml}
+         </ul>
+      </div>`;          
 
   appEl.innerHTML = appHtml;
 
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
-
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
-      goToPage(USER_POSTS_PAGE, {
-        userId: userEl.dataset.userId,
-      });
-    });
-  }
 
    //«Оживляем» кнопку и счетчик лайков
    const LikeElements = document.querySelectorAll(".like-button");
@@ -74,14 +71,14 @@ export function renderPostsPageComponent({ appEl, posts}) {
         }).catch(() => {
           posts[index].isLiked = false;
           posts[index].likes.pop();
-          renderPostsPageComponent({ appEl, posts });
+          renderUserPostsPageComponent({ appEl, posts });
         });
         posts[index].isLiked = true;
         posts[index].likes.push({
           id: user.id,
           name: user.name,
         });
-        renderPostsPageComponent({ appEl, posts });
+        renderUserPostsPageComponent({ appEl, posts });
       } else if (user && posts[index].isLiked === true) {
         deleteLike({
           token: getToken(),
@@ -95,7 +92,7 @@ export function renderPostsPageComponent({ appEl, posts}) {
         });
         posts[index].isLiked = false;
         posts[index].likes.pop();
-        renderPostsPageComponent({ appEl, posts });
+        renderUserPostsPageComponent({ appEl, posts });
       }
     });
   }
