@@ -37,11 +37,11 @@ export const logout = () => {
 export const goToPage = (newPage, data) => {
   if (
     [
-      POSTS_PAGE,
-      AUTH_PAGE,
-      ADD_POSTS_PAGE,
-      USER_POSTS_PAGE,
-      LOADING_PAGE,
+      POSTS_PAGE,    // лицевая страница 
+      AUTH_PAGE,     // страница входа
+      ADD_POSTS_PAGE, // страничка добавления поста
+      USER_POSTS_PAGE, // страничка постов юзера
+      LOADING_PAGE, //страница загрузки
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
@@ -70,8 +70,15 @@ export const goToPage = (newPage, data) => {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      renderApp();
+
+      return getUserPosts({ token: getToken(), id: data.userId })
+        .then((userPosts) => {
+          page = USER_POSTS_PAGE;
+          posts = userPosts;
+          userId = data.userId;
+          renderApp();
+        })
     }
 
     page = newPage;
@@ -107,26 +114,27 @@ const renderApp = () => {
   }
 
   if (page === ADD_POSTS_PAGE) {
-    return renderAddPostPageComponent({
-      appEl,
-      onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
-      },
-    });
+      return renderAddPostPageComponent({ appEl, token: getToken() });
   }
 
   if (page === POSTS_PAGE) {
+    let isUser = false;
     return renderPostsPageComponent({
       appEl,
+      isUser,
+      token: getToken()
     });
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    let isUser = true;
+
+    renderPostsPageComponent({
+      // TODO: реализовать страницу фотографию пользвателя
+      appEl,
+      isUser,
+      token: getToken()
+    })
   }
 };
 
