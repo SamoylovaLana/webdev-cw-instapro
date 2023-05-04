@@ -12,20 +12,16 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           <div class="header-container"></div>
           <div class="form">
               <h3 class="form-title">
-                ${
-                  isLoginMode
+                ${isLoginMode
                     ? "Вход в&nbsp;Instapro"
                     : "Регистрация в&nbsp;Instapro"
                 }
                 </h3>
               <div class="form-inputs">
-    
-                  ${
-                    !isLoginMode
+                  ${!isLoginMode
                       ? `
                       <div class="upload-image-container"></div>
-                      <input type="text" id="name-input" class="input" placeholder="Имя" />
-                      `
+                      <input type="text" id="name-input" class="input" placeholder="Имя" />`
                       : ""
                   }
                   
@@ -46,11 +42,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                     ${isLoginMode ? "Зарегистрироваться." : "Войти."}
                   </button>
                 </p> 
-               
               </div>
           </div>
-      </div>    
-`;
+      </div>`;
 
     appEl.innerHTML = appHtml;
 
