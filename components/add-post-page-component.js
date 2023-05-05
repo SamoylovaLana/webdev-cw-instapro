@@ -1,14 +1,19 @@
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { renderHeaderComponent } from "./header-component.js";
+import { onAddPostClick } from "../api.js";
+import { POSTS_PAGE } from "../routes.js";
 
-export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
-  renderHeaderComponent({
-    element: document.querySelector(".header-container"),
-  });
+export function renderAddPostPageComponent({ appEl }) {
 
   let imageUrl = "";
   const render = () => {
+    
+    // рендер заголовка
+    renderHeaderComponent({
+      element: document.querySelector(".header-container"),
+    });
+    
     // TODO: Реализовать страницу добавления поста
     const appHtml = `
     <div class="page-container">
@@ -27,6 +32,22 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
    </div>`;
 
     appEl.innerHTML = appHtml;
+
+    renderHeaderComponent({
+      element: document.querySelector(".header-container"),
+    });
+
+     //рендер добавленного фото
+     const uploadImageContainer = appEl.querySelector(".upload-image-container");
+
+     if (uploadImageContainer) {
+       renderUploadImageComponent({
+         element: appEl.querySelector(".upload-image-container"),
+         onImageUrlChange(newImageUrl) {
+           imageUrl = newImageUrl;
+         },
+       });
+     }
 
     document.getElementById("add-button").addEventListener("click", () => {
       const postDescription = document.getElementById("description-input").value

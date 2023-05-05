@@ -4,7 +4,7 @@ import { goToPage, posts } from "../index.js";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
-  //console.log("Актуальный список постов:", posts);
+  console.log("Актуальный список постов:", posts);
 
   /*
    * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
@@ -12,7 +12,7 @@ export function renderPostsPageComponent({ appEl }) {
    */
   const postsHtml = posts.map((post, index) => {
     return `
-       <li class="post" data-index=${index}>
+       <li class="post">
           <div class="post-header" data-user-id="${post.user.id}">
               <img src="${post.user.imageUrl}" class="post-header__user-image">
               <p class="post-header__user-name">${post.user.name}</p>
@@ -21,11 +21,11 @@ export function renderPostsPageComponent({ appEl }) {
             <img class="post-image" src="${post.imageUrl}">
           </div>
           <div class="post-likes">
-            <button data-post-id="${post.id}" class="like-button">
-            ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
+            <button data-post-id="${post.id}" data-index="${index}" class="like-button">
+             <img src="./assets/images/${post.isLiked ? 'like-active.svg' : 'like-not-active.svg'}">
             </button>
             <p class="post-likes-text">
-              Нравится: <strong> '${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"}' </strong>
+              Нравится: <strong> ${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"} </strong>
             </p>
           </div>
           <p class="post-text">
@@ -34,7 +34,6 @@ export function renderPostsPageComponent({ appEl }) {
           </p>
           <p class="post-date">
           ${post.createdAt}
-            19 минут назад
           </p>
         </li>`;
   }).join("");
@@ -60,4 +59,33 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+
+  //«Оживляем» кнопку и счетчик лайков
+  function likeActive () {
+    const likeButtons = document.querySelectorAll('.like-button')
+
+    for (const likeButton of likeButtons) {
+      likeButton.addEventListener('click', () => {
+        const index = likeButton.dataset.index
+        const id = likeButton.dataset.postId
+        if (user) {
+          likeButton.classList.add('loading-like');
+
+          if (posts[index].isLiked === false) {
+            likePost({ id, token: getToken() })
+            posts[index].isLiked = true
+            posts[index].likes.push({
+              id: posts[index].user.id,
+              name: posts[index].user.name
+            })
+          } else {
+            posts[index].isLiked = false
+            posts[index].likes.pop()
+            disLikePost({ id, token: getToken() })
+          }
+        }
+      })
+    }
+  }
+  likeActive()
 }

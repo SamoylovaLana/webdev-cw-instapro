@@ -93,8 +93,8 @@ export function onAddPostClick({ description, imageUrl, token }) {
   return fetch(postsHost, {
     method: "POST",
     body: JSON.stringify({
-      description,
-      imageUrl,
+      "description": description,
+      "imageUrl": imageUrl,
     }),
     headers: {
       Authorization: token,
@@ -108,8 +108,8 @@ export function onAddPostClick({ description, imageUrl, token }) {
 }
 
 // Ставим, убираем лайки
-export function addLikeToPost({ id, token }) {
-  return fetch(postsHost+`/${id}/like`,{
+export function likePost ({ id, token }) {
+  return fetch(postsHost + '/' + id + '/like', {
     method: "POST",
     headers: {
       Authorization: token,
@@ -120,11 +120,11 @@ export function addLikeToPost({ id, token }) {
       throw new Error("Чтобы поставить лайк, необходимо авторизоваться");
     }
     return response.json();
-  });
+  })
 }
 
-export function removeLikeToPost({ id, token }) {
-  return fetch(postsHost+`/${id}/dislike`,{
+export function disLikePost ({ id, token }) {
+  return fetch(postsHost + '/' + id + '/dislike',{
     method: "POST",
     headers: {
       Authorization: token,
