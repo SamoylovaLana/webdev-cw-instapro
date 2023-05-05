@@ -116,6 +116,9 @@ export function likePost ({ id, token }) {
     },
   })
   .then((response) => {
+    if (response.status == 401){
+      throw new Error("Чтобы поставить лайк, необходимо авторизоваться");
+    }
     return response.json();
   })
 }
@@ -128,6 +131,9 @@ export function disLikePost ({ id, token }) {
     },
   })
   .then((response) => {
+    if (response.status == 401){
+      throw new Error("Чтобы убрать лайк, необходимо авторизоваться");
+    }
     return response.json();
   });
 }
