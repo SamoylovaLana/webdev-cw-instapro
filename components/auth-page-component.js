@@ -1,6 +1,7 @@
 import { loginUser, registerUser } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { safeInput } from "../helpers.js";
 
 export function renderAuthPageComponent({ appEl, setUser }) {
   let isLoginMode = true;
@@ -46,7 +47,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                     ${isLoginMode ? "Зарегистрироваться." : "Войти."}
                   </button>
                 </p> 
-               
+            
               </div>
           </div>
       </div>    
@@ -129,7 +130,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         registerUser({
           login: login,
           password: password,
-          name: name,
+          name: safeInput(name),
           imageUrl,
         })
           .then((user) => {

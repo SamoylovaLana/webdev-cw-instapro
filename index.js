@@ -20,7 +20,7 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -73,13 +73,14 @@ export const goToPage = (newPage, data) => {
       renderApp();
 
       return getUserPosts({ token: getToken(), id: data.userId })
-        .then((userPosts) => {
-          page = USER_POSTS_PAGE;
-          posts = userPosts;
-          userId = data.userId;
-          renderApp();
-        })
-    }
+        .then(
+          userPost => {
+            page = USER_POSTS_PAGE
+            posts = userPost
+            renderApp()
+          }
+        )
+      }
 
     page = newPage;
     renderApp();
@@ -114,27 +115,23 @@ const renderApp = () => {
   }
 
   if (page === ADD_POSTS_PAGE) {
-      return renderAddPostPageComponent({ appEl, token: getToken() });
+    return renderAddPostPageComponent({
+      appEl,
+      onAddPostClick ({ description, imageUrl }) {
+        goToPage(POSTS_PAGE)
+      }
+    })
   }
 
   if (page === POSTS_PAGE) {
-    let isUser = false;
     return renderPostsPageComponent({
-      appEl,
-      isUser,
-      token: getToken()
-    });
+      appEl
+    })
   }
 
   if (page === USER_POSTS_PAGE) {
-    let isUser = true;
-
-    renderPostsPageComponent({
-      // TODO: реализовать страницу фотографию пользвателя
-      appEl,
-      isUser,
-      token: getToken()
-    })
+    // TODO: реализовать страницу фотографию пользвателя
+    return renderPostsPageComponent({ appEl })
   }
 };
 

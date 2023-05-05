@@ -1,18 +1,16 @@
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { onAddPostClick } from "../api.js";
-import { POSTS_PAGE } from "../routes.js";
+import { postPosts } from "../api.js";
+import { getToken } from '../index.js';
+//import { POSTS_PAGE } from "../routes.js";
+import { safeInput } from "../helpers.js";
 
 
-export function renderAddPostPageComponent({ appEl }) {
+export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
-  let imageUrl = "";
+  
   const render = () => {
-    
-    // рендер заголовка
-    renderHeaderComponent({
-      element: document.querySelector(".header-container"),
-    });
+    let imageUrl = "";
     
     // TODO: Реализовать страницу добавления поста
     const appHtml = `
@@ -24,7 +22,7 @@ export function renderAddPostPageComponent({ appEl }) {
           <div class="upload-image-container"></div>
           <label>
             Опишите фотографию:
-            <textarea class="input textarea" id="description-input" rows="4"></textarea>
+            <textarea class="input textarea" id="textarea" rows="4"></textarea>
           </label>
           <button class="button" id="add-button">Добавить</button>
        </div>
@@ -33,54 +31,43 @@ export function renderAddPostPageComponent({ appEl }) {
 
     appEl.innerHTML = appHtml;
 
+    // рендер заголовка
     renderHeaderComponent({
       element: document.querySelector(".header-container"),
     });
 
      //рендер добавленного фото
-     const uploadImageContainer = appEl.querySelector(".upload-image-container");
-
-     if (uploadImageContainer) {
-       renderUploadImageComponent({
-         element: appEl.querySelector(".upload-image-container"),
-         onImageUrlChange(newImageUrl) {
-           imageUrl = newImageUrl;
-         },
-       });
-     }
+    renderUploadImageComponent({
+      element: appEl.querySelector(".upload-image-container"),
+      onImageUrlChange(newImageUrl) {
+        imageUrl = newImageUrl;
+      },
+    });
+     
 
     document.getElementById("add-button").addEventListener("click", () => {
-      const postDescription = document.getElementById("description-input").value
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;");
         
       if (!imageUrl) {
         alert("Не выбрана фотография");
         return;
       }
 
-      if (!postDescription) {
+      if (!document.getElementById('textarea').value) {
         alert("Добавьте описание фотографии");
         return;
       }
     
-      onAddPostClick({
+      postPosts ({
         token: getToken(),
-        description: postDescription,
-        imageUrl,
+        description: safeInput(document.getElementById('textarea').value),
+        imageUrl: imageUrl
+      }).then(() => {
+        return onAddPostClick({
+          description: safeInput(document.getElementById('textarea').value),
+          imageUrl: imageUrl
+        })
       })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        goToPage(POSTS_PAGE);
-      });  
-    });
-    
+    })
   };
-
   render();
 }
