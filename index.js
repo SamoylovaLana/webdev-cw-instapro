@@ -117,10 +117,12 @@ const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
-      onAddPostClick ({ description, imageUrl }) {
-        goToPage(POSTS_PAGE)
-      }
-    })
+      onAddPostClick({ description, imageUrl }) {
+        // TODO: реализовать добавление поста в API
+        console.log("Добавляю пост...", { description, imageUrl });
+        goToPage(POSTS_PAGE);
+      },
+    });
   }
 
   if (page === POSTS_PAGE) {
