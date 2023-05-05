@@ -93,6 +93,25 @@
   cursor: pointer;
 }
 
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(30deg);;
+  }
+  75% {
+    transform: rotate(-30deg);;
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.loading-like {
+  animation: rotating 2s linear infinite;
+}
+
 .user-name {
   font-weight: 500;
 }
@@ -195,4 +214,62 @@
   box-sizing: border-box;
   width: 100%;
   text-align: center;
+}
+
+@media(min-width: 600px){
+  .post-image {
+    max-width: 800px;
+  }
+  .post-image-container {
+    height: 600px;
+    max-height: 600px;
+  }
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .page-header{
+    padding: 40px 20px;
+  }
+  .posts{
+    font-size: 18px;
+  }
+  .post-header{
+    margin-bottom: 20px;
+  }
+  .post-header__user-image {
+    width: 60px;
+    height: 60px;
+  }
+  .post + .post {
+    margin-top: 40px;
+  }
+  .post-likes {
+    margin-top: 16px;
+  }
+  .post-text{
+    font-size: 16px;
+  }
+  .post-date{
+    margin-top: 12px;
+    font-size: 16px;
+  }
+  .logo {
+    font-size: 36px;
+  }
+
+  .header-container {
+    margin-bottom: 32px;
+  }
+  .header-button {
+    font-size: 18px;
+  }
+  .header-button:hover {
+    font-size: 19px;
+  }
+  .form-inputs{
+    gap: 16px;
+  }
 }

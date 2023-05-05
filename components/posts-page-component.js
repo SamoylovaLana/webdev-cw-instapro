@@ -30,7 +30,7 @@ export function renderPostsPageComponent({ appEl }) {
             </p>
           </div>
           <p class="post-text">
-            <span class="user-name">"${post.user.name}"</span>
+            <span class="user-name">${post.user.name}</span>
             ${post.description}
           </p>
           <p class="post-date">
@@ -85,8 +85,11 @@ export function renderPostsPageComponent({ appEl }) {
             disLikePost({ id, token: getToken() })
           }
         }
+        setTimeout(()=>{
+          renderPostsPageComponent({ appEl })
+        },2000)
       })
     }
   }
-  likeActive()
+  likeActive ();
 }
