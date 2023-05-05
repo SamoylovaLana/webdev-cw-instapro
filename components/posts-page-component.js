@@ -2,6 +2,8 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage, posts, getToken, user } from "../index.js";
 import { likePost, disLikePost } from "../api.js";
+import { formatDistanceToNow } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
@@ -34,7 +36,7 @@ export function renderPostsPageComponent({ appEl }) {
             ${post.description}
           </p>
           <p class="post-date">
-          ${post.createdAt}
+          ${formatDistanceToNow(new Date(post.createdAt), {locale: ru, addSuffix: true})}
           </p>
         </li>`;
   }).join("");
@@ -69,8 +71,12 @@ export function renderPostsPageComponent({ appEl }) {
       likeButton.addEventListener('click', () => {
         const index = likeButton.dataset.index
         const id = likeButton.dataset.postId
+        if(!getToken()) {
+          alert("Нравлик могут поставить только авторизованные пользователи. Вам нужно Войти или Зарегистрироваться");
+          return;
+        }
         if (user) {
-          likeButton.classList.add('loading-like');
+          likeButton.classList.add('loading-like'); 
 
           if (posts[index].isLiked === false) {
             likePost({ id, token: getToken() })

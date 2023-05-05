@@ -73,11 +73,10 @@ export const goToPage = (newPage, data) => {
       renderApp();
 
       return getUserPosts({ token: getToken(), id: data.userId })
-        .then(
-          userPost => {
-            page = USER_POSTS_PAGE
-            posts = userPost
-            renderApp()
+        .then((userPost) => {
+            page = USER_POSTS_PAGE;
+            posts = userPost;
+            renderApp();
           }
         )
       }
@@ -133,7 +132,7 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    return renderPostsPageComponent({ appEl })
+    return renderPostsPageComponent ({ appEl, page });
   }
 };
 
